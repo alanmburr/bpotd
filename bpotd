@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-import os
-import gi
+import os, gi, requests, shutil
 
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gtk, Gio
-import sys
+from gi.repository import Gtk, Gio, GdkPixbuf
+from datetime import date
 
 down = Gtk.PositionType.BOTTOM
 up = Gtk.PositionType.TOP
@@ -13,27 +12,58 @@ left = Gtk.PositionType.LEFT
 right = Gtk.PositionType.RIGHT
 
 CURRPATH = os.path.dirname(os.path.realpath(__file__))
-read_more_link = os.popen('printf "$(./curl.sh)"').read()
-body_text = os.popen('curl https://www.bing.com 2>&1 | grep -oP \'id="iotd_desc".{0,715}\' | cut -d \'>\' -f2 | cut -d "<" -f1').read()
-title_text = os.popen('printf "$(curl https://www.bing.com 2>&1 | grep -oP \'og:title\" content=\".{0,80}\' | cut -d \'\"\' -f3)..."').read()
+today = str(date.today())
+
+basetxt = str(requests.get('http://bing.com').text)
+
+adesc = basetxt
+bdesc = int(adesc.find('id="iotd_desc"'))
+cdesc = int(bdesc + 1000)
+edesc = adesc[bdesc:cdesc].split(">")[1]
+fdesc = edesc.split("<")[0]
+desc = fdesc
+body_text = desc
+ahref = str(adesc[bdesc:cdesc].split(">")[3])
+bhref = ahref.split("\"")[1]
+chref = "https://www.bing.com"+bhref
+dhref = chref.replace("&quot;","\"")
+href = dhref.replace("&amp;", "&")
+aimg = basetxt
+bimg = int(aimg.find('og:image" content="'))
+cimg = int(bimg + 100)
+dimg = aimg[bimg:cimg].split("rf=\"")[0]
+img = dimg.split("\"")[2]
+atitle = basetxt
+btitle = int(atitle.find('og:title" content="'))
+ctitle = int(btitle + 60)
+dtitle = atitle[btitle:ctitle].split('rf="')[0]
+title_text = dtitle.split('"')[2]
+acredit = basetxt
+bcredit = int(acredit.find('vs_bs_credit"'))
+dcredit = int(bcredit + 50)
+ecredit = acredit[bcredit:dcredit].split(">")[1]
+credit = ecredit.split("<")[0]
 
 class Window(Gtk.Window):
 	def __init__(self):
-		Gtk.Window.__init__(self, title=title_text)
+		Gtk.Window.__init__(self, title=title_text+"...")
 		Gtk.Window.set_default_icon_from_file("icon.ico")
 		
-		self.set_size_request(600, 250)
+		self.set_size_request(700, 600)
 		grid = Gtk.Grid()
+		grid.expand = True
 		self.add(grid)
 		
-		btngrid = Gtk.Grid(expand=True)
+		btngrid = Gtk.Box(expand=True)
+		btngrid.homogenous = True
+		btngrid.expand = True
 		
 		hb = Gtk.HeaderBar()
 		hb.set_show_close_button(True)
 		hb.props.title = title_text
 		self.set_titlebar(hb)
 		
-		label = Gtk.Label(label=body_text)
+		label = Gtk.Label(label=body_text+"\n")
 		label.set_line_wrap(True)
 		label.set_justify(Gtk.Justification.FILL)
 		label.set_max_width_chars(74)
@@ -46,34 +76,48 @@ class Window(Gtk.Window):
 		readmore = Gtk.Button.new_with_mnemonic("_Read _More")
 		readmore.connect("clicked", self.read_more)
 		
-		open_pic = Gtk.Button.new_with_mnemonic("_Open _Image in _New _Tab")
+		open_pic = Gtk.Button.new_with_mnemonic("_Open _Image")
 		open_pic.connect("clicked", self.openpic)
-		
-		open_pin_in_app = Gtk.Button.new_with_mnemonic("_Open _Image in " + os.popen('printf "$(xdg-mime query default image/jpeg | tr . \" \" | awk \'{print $3}\')"').read())
-		open_pin_in_app.connect("clicked", self.openpic_app)
-		
-		grid.attach(label, 0, 0, 1, 1)
-		grid.attach_next_to(btngrid, label, down, 1, 1) 
-		btngrid.attach(close, 0, 1, 1, 1)
-		btngrid.attach_next_to(readmore, close, right, 1, 1)
-		btngrid.attach_next_to(open_pic, readmore, right, 1, 1)
-		btngrid.attach_next_to(open_pin_in_app, open_pic, right, 1, 1)
-		
+
+		if not os.path.exists("/tmp/wackyblackie/"):
+			os.mkdir(os.path.join("/tmp/", "wackyblakie", ""))
+		r = requests.get(img, stream = True)
+		if r.status_code == 200:
+    			r.raw.decode_content = True
+    			with open(os.path.join("/tmp/", "wackyblackie", "bpotd_"+today+".jpg"),'wb') as f:
+        			shutil.copyfileobj(r.raw, f)
+		pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(filename=os.path.join("/tmp/","wackyblackie", "bpotd_"+today+".jpg"), width=683, height=384, preserve_aspect_ratio=True)
+		image = Gtk.Image.new_from_pixbuf(pixbuf)
+
+		download_open = Gtk.Button.new_with_mnemonic("_Download and _Open")
+		download_open.connect("clicked", self.downloadandopen)
+
+		grid.attach(image, 0, 0, 1, 1)
+		grid.attach(label, 0, 1,1, 1)
+		grid.attach(btngrid, 0, 2, 1, 1) 
+		btngrid.pack_start(close, True, True, 0)
+		btngrid.pack_start(readmore, True, True, 0)
+		btngrid.pack_start(open_pic, True, True, 0)
+		btngrid.pack_start(download_open, True, True, 0)
+
 	def read_more(self, button):
-		read_xdg = 'xdg-open "https://www.bing.com$(curl https://www.bing.com 2>&1 | grep -oPi ".{0,200}Learn more</a>" | grep -oP \'href=.{0,150}\' | cut -d \'"\' -f2)"'
-		os.system(read_xdg)
+		os.system('xdg-open '+href)
 		Gtk.main_quit()
 		
 	def openpic(self, button):
-		open_xdg = 'xdg-open "$(./curl.sh)"'
-		os.system(open_xdg) 
+		os.system("xdg-open /tmp/wackyblackie/bpotd_"+today+".jpg")
 		Gtk.main_quit()
-			
-			
-	def openpic_app(self, button):
-		os.system('mkdir -p $HOME/Pictures/bpotd')
-		curl_xdg = "xdg-open $HOME/Pictures/bpotd/$(date +%F).jpg"
-		os.system("curl $(./curl.sh) -o $HOME/Pictures/bpotd/$(date +%F).jpg; "+curl_xdg)
+
+	def downloadandopen(self, button):
+		if not os.path.exists("/home/"+os.environ["USER"]+"/Pictures/bpotd/"):
+			os.mkdir(os.path.join("/home/", os.environ["USER"], "Pictures", "bpotd"))
+		r = requests.get(img, stream = True)
+		if r.status_code == 200:
+    			r.raw.decode_content = True
+    			with open(os.path.join(os.popen("printf $HOME").read(), "Pictures", "bpotd", "bpotd_"+today+".jpg"),'wb') as f:
+        			shutil.copyfileobj(r.raw, f)
+		os.system("xdg-open $HOME/Pictures/bpotd/bpotd_"+today+".jpg")
+		Gtk.main_quit()
 	
 window = Window()
 window.connect("destroy", Gtk.main_quit)
