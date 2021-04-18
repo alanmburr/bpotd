@@ -1,0 +1,9 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Type=Application
+Name=bpotd
+Exec=/usr/lib/wackyblackie/bpotd/bpotd
+Icon=/usr/lib/wackyblackie/bpotd/icon.ico
+Keywords=Bing;Pictures;bpotd;
