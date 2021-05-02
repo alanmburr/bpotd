@@ -1,3 +1,6 @@
-[submodule "windows/bpotd"]
-	path = windows/bpotd
+[submodule ".windows/bpotd"]
+	path = .windows/bpotd
 	url = https://github.com/wackyblackie/bpotd.windows.git
+[submodule "docs/heroku"]
+	path = docs/heroku
+	url = https://git.heroku.com/bpotd.git
