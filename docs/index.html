@@ -141,8 +141,10 @@
         xhr.onload = function() {
             const data = JSON.parse(this.response);
             document.title = data.htmlTitle;
-            $("a.MYhref").attr("href",data.href);
-            $("a.MYhref.MYside").attr("href",data.href);
+            var myHref = data.href;
+            myHref = myHref.replace(/&quot;/g, '"');
+            $("a.MYhref").attr("href",myHref);
+            $("a.MYhref.MYside").attr("href",myHref);
             $("img.MYimage").attr("src",data.image.url);
             $("img.MYimageWidth").attr("width", data.image.size.width);
             $(".MYtitle").attr("title",data.title);
