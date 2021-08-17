@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
-import os
-from gi.repository import Gtk as gtk, AppIndicator3 as appindicator
+import os, gi
+
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk as gtk
+from gi.repository import AppIndicator3 as appindicator
 
 CURRPATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -74,7 +77,7 @@ def gobingcom(_):
   os.system('xdg-open https://www.bing.com')
 
 def openapp(_):
-  os.system(CURRPATH+"/bpotd-py")
+  os.system(CURRPATH+"/bpotd")
   
 def open_img(_):
   os.system('mkdir -p $HOME/Pictures/bpotd')

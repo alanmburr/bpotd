@@ -44,6 +44,8 @@ dcredit = int(bcredit + 50)
 ecredit = acredit[bcredit:dcredit].split(">")[1]
 credit = ecredit.split("<")[0]
 
+tmp="/tmp/"
+
 class Window(Gtk.Window):
 	def __init__(self):
 		Gtk.Window.__init__(self, title=title_text+"...")
@@ -61,6 +63,7 @@ class Window(Gtk.Window):
 		hb = Gtk.HeaderBar()
 		hb.set_show_close_button(True)
 		hb.props.title = title_text
+		hb.props.subtitle = "bpotd"
 		self.set_titlebar(hb)
 		
 		label = Gtk.Label(label=body_text+"\n")
@@ -73,23 +76,25 @@ class Window(Gtk.Window):
 		close = Gtk.Button.new_with_mnemonic("_Close")
 		close.connect("clicked", Gtk.main_quit)
 		
-		readmore = Gtk.Button.new_with_mnemonic("_Read _More")
+		readmore = Gtk.Button.new_with_mnemonic("_Read More")
 		readmore.connect("clicked", self.read_more)
 		
-		open_pic = Gtk.Button.new_with_mnemonic("_Open _Image")
+		open_pic = Gtk.Button.new_with_mnemonic("_Open Image")
 		open_pic.connect("clicked", self.openpic)
 
-		if not os.path.exists("/tmp/wackyblackie/"):
-			os.mkdir(os.path.join("/tmp/", "wackyblakie", ""))
+		if not os.path.exists(os.path.join(tmp, "wackyblackie", "")):
+			os.mkdir(os.path.join(tmp, "wackyblackie", ""))
 		r = requests.get(img, stream = True)
 		if r.status_code == 200:
-    			r.raw.decode_content = True
-    			with open(os.path.join("/tmp/", "wackyblackie", "bpotd_"+today+".jpg"),'wb') as f:
-        			shutil.copyfileobj(r.raw, f)
-		pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(filename=os.path.join("/tmp/","wackyblackie", "bpotd_"+today+".jpg"), width=683, height=384, preserve_aspect_ratio=True)
+			r.raw.decode_content = True
+			if not os.path.exists(os.path.join(tmp, "wackyblackie", "bpotd_"+today+".jpg")):
+				with open(os.path.join(tmp, "wackyblackie", "bpotd_"+today+".jpg"),'wb') as f:
+					shutil.copyfileobj(r.raw, f)
+
+		pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(filename=os.path.join(tmp,"wackyblackie", "bpotd_"+today+".jpg"), width=683, height=384, preserve_aspect_ratio=True)
 		image = Gtk.Image.new_from_pixbuf(pixbuf)
 
-		download_open = Gtk.Button.new_with_mnemonic("_Download and _Open")
+		download_open = Gtk.Button.new_with_mnemonic("_Download and Open")
 		download_open.connect("clicked", self.downloadandopen)
 
 		grid.attach(image, 0, 0, 1, 1)
