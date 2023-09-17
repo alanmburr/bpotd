@@ -4,10 +4,10 @@ Add-Type -AssemblyName System.Drawing
 Invoke-WebRequest -Uri "https://bpotd.herokuapp.com/static/favicon.ico" -ContentType "image/vnd.microsoft.icon" -OutFile $env:TEMP/bpotd.ico
 $logo_img = [System.Drawing.Icon]::ExtractAssociatedIcon($env:TEMP+'/bpotd.ico')
 Try { $quit_img = [System.Drawing.Image]::FromFile("C:\Windows\System32\SecurityAndMaintenance_Error.png") } Catch { $quit_img = [System.Drawing.SystemIcons]::Error }
-Invoke-WebRequest -Uri "https://wackyblackie.github.io/bpotd/imageres_72.ico" -ContentType "image/vnd.microsoft.icon" -OutFile $env:TEMP/imageres_72.ico
+Invoke-WebRequest -Uri "https://alanmburr.github.io/bpotd/imageres_72.ico" -ContentType "image/vnd.microsoft.icon" -OutFile $env:TEMP/imageres_72.ico
 $picture_img = [System.Drawing.Icon]::ExtractAssociatedIcon($env:TEMP+"/imageres_72.ico")
 Try { $webbrowser_img = [System.Drawing.Icon]::ExtractAssociatedIcon("C:\Windows\System32\connect.dll") } Catch {
-    Invoke-WebRequest -Uri "https://wackyblackie.github.io/bpotd/connect_10101.ico" -ContentType "image/vnd.microsoft.icon" -OutFile $env:TEMP/connect_10101.ico
+    Invoke-WebRequest -Uri "https://alanmburr.github.io/bpotd/connect_10101.ico" -ContentType "image/vnd.microsoft.icon" -OutFile $env:TEMP/connect_10101.ico
     $webbrowser_img = [System.Drawing.Icon]::ExtractAssociatedIcon($env:TEMP+"/connect_10101.ico")}
 
 $Main_Tool_Icon = New-Object System.Windows.Forms.NotifyIcon

@@ -1,3 +1,3 @@
 [submodule ".windows/bpotd"]
 	path = .windows/bpotd
-	url = https://github.com/wackyblackie/bpotd.windows.git
+	url = https://github.com/alanmburr/bpotd.windows.git

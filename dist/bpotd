@@ -82,16 +82,16 @@ class Window(Gtk.Window):
 		open_pic = Gtk.Button.new_with_mnemonic("_Open Image")
 		open_pic.connect("clicked", self.openpic)
 
-		if not os.path.exists(os.path.join(tmp, "wackyblackie", "")):
-			os.mkdir(os.path.join(tmp, "wackyblackie", ""))
+		if not os.path.exists(os.path.join(tmp, "alanmburr", "")):
+			os.mkdir(os.path.join(tmp, "alanmburr", ""))
 		r = requests.get(img, stream = True)
 		if r.status_code == 200:
 			r.raw.decode_content = True
-			if not os.path.exists(os.path.join(tmp, "wackyblackie", "bpotd_"+today+".jpg")):
-				with open(os.path.join(tmp, "wackyblackie", "bpotd_"+today+".jpg"),'wb') as f:
+			if not os.path.exists(os.path.join(tmp, "alanmburr", "bpotd_"+today+".jpg")):
+				with open(os.path.join(tmp, "alanmburr", "bpotd_"+today+".jpg"),'wb') as f:
 					shutil.copyfileobj(r.raw, f)
 
-		pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(filename=os.path.join(tmp,"wackyblackie", "bpotd_"+today+".jpg"), width=683, height=384, preserve_aspect_ratio=True)
+		pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(filename=os.path.join(tmp,"alanmburr", "bpotd_"+today+".jpg"), width=683, height=384, preserve_aspect_ratio=True)
 		image = Gtk.Image.new_from_pixbuf(pixbuf)
 
 		download_open = Gtk.Button.new_with_mnemonic("_Download and Open")
@@ -110,7 +110,7 @@ class Window(Gtk.Window):
 		Gtk.main_quit()
 		
 	def openpic(self, button):
-		os.system("xdg-open /tmp/wackyblackie/bpotd_"+today+".jpg")
+		os.system("xdg-open /tmp/alanmburr/bpotd_"+today+".jpg")
 		Gtk.main_quit()
 
 	def downloadandopen(self, button):

@@ -1,5 +1,5 @@
 PREFIX ?= /usr
-MYDIR ?= $(PREFIX)/lib/wackyblackie
+MYDIR ?= $(PREFIX)/lib/alanmburr
 INSTDIR ?= $(MYDIR)/bpotd
 D ?= $(DESTDIR)$(INSTDIR)
 

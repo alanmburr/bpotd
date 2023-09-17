@@ -14,7 +14,7 @@ class Window(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Install bpotd")
         if not os.path.join("/tmp/", "bpotd.install.ico"):
-            icon = requests.get("https://wackyblackie.github.io/bpotd/favicon.ico")
+            icon = requests.get("https://alanmburr.github.io/bpotd/favicon.ico")
             with open(os.path.join("/tmp/", "bpotd.install.ico"), 'wb') as f:
                 f.write(icon.content)
         Gtk.Window.set_default_icon_from_file(os.path.join("/tmp/", "bpotd.install.ico"))
@@ -53,29 +53,29 @@ class Window(Gtk.Window):
             ": Installing rev. 0.0.1-08172021ubuntu-1\n",
             "Trying to create dir:", sep='')
         try:
-            os.mkdir(os.path.join("/usr/lib/wackyblackie/")) if not os.path.exists(os.path.join("/usr/lib/wackyblackie/")) else print("\033[1;94m\tI:\033[0m dir exists")
-            os.mkdir(os.path.join("/usr/lib/wackyblackie/bpotd/")) if not os.path.exists(os.path.join("/usr/lib/wackyblackie/bpotd/")) else print("\033[1;94m\tI:\033[0m dir exists")
+            os.mkdir(os.path.join("/usr/lib/alanmburr/")) if not os.path.exists(os.path.join("/usr/lib/alanmburr/")) else print("\033[1;94m\tI:\033[0m dir exists")
+            os.mkdir(os.path.join("/usr/lib/alanmburr/bpotd/")) if not os.path.exists(os.path.join("/usr/lib/alanmburr/bpotd/")) else print("\033[1;94m\tI:\033[0m dir exists")
             os.mkdir(os.path.join("/etc/xdg/autostart/")) if not os.path.exists(os.path.join("/etc/xdg/autostart/")) else print("\033[1;94m\tI:\033[0m dir exists")
             print("\tSucceeded.")
         except: 
             print("\t\033[1;91mE\033[1;97m: %s" % sys.exc_info()[0])
             exit(1)
 
-        print("Trying to download script: \033[4mbpotd\033[0m from remote: \033[4m%s\033[0m" % 'https://raw.githubusercontent.com/wackyblackie/bpotd/master/dist/bpotd')
+        print("Trying to download script: \033[4mbpotd\033[0m from remote: \033[4m%s\033[0m" % 'https://raw.githubusercontent.com/alanmburr/bpotd/master/dist/bpotd')
         try:
-            with open(os.path.join("/usr/lib/wackyblackie/bpotd/", "bpotd"), 'wb') as fa:
-                fa.write(requests.get("https://raw.githubusercontent.com/wackyblackie/bpotd/master/dist/bpotd").content+b"\n")
-            os.system("/usr/bin/chmod 0755 %s" % os.path.join("/usr/lib/wackyblackie/bpotd/", "bpotd"))
+            with open(os.path.join("/usr/lib/alanmburr/bpotd/", "bpotd"), 'wb') as fa:
+                fa.write(requests.get("https://raw.githubusercontent.com/alanmburr/bpotd/master/dist/bpotd").content+b"\n")
+            os.system("/usr/bin/chmod 0755 %s" % os.path.join("/usr/lib/alanmburr/bpotd/", "bpotd"))
             print("\tSucceeded.")
         except:
             print("\t\033[1;91mE\033[1;97m: %s\033[0m" % sys.exc_info()[0])
             exit(1)
 
-        print("Trying to download script: \033[4mtray\033[0m from remote: \033[4m%s\033[0m" % 'https://raw.githubusercontent.com/wackyblackie/bpotd/master/dist/tray')
+        print("Trying to download script: \033[4mtray\033[0m from remote: \033[4m%s\033[0m" % 'https://raw.githubusercontent.com/alanmburr/bpotd/master/dist/tray')
         try:
-            with open(os.path.join("/usr/lib/wackyblackie/bpotd/", "tray"), 'wb') as fb:
-                fb.write(requests.get("https://raw.githubusercontent.com/wackyblackie/bpotd/master/dist/tray").content+b"\n")
-            os.system("/usr/bin/chmod 0755 %s" % os.path.join("/usr/lib/wackyblackie/bpotd/", "tray"))
+            with open(os.path.join("/usr/lib/alanmburr/bpotd/", "tray"), 'wb') as fb:
+                fb.write(requests.get("https://raw.githubusercontent.com/alanmburr/bpotd/master/dist/tray").content+b"\n")
+            os.system("/usr/bin/chmod 0755 %s" % os.path.join("/usr/lib/alanmburr/bpotd/", "tray"))
             print("\tSucceeded.")
         except:
             print("\t\033[1;91mE\033[1;97m: %s\033[0m" % sys.exc_info()[0])
@@ -83,8 +83,8 @@ class Window(Gtk.Window):
 
         print("Trying to create symlinks.")
         try:
-            os.symlink(os.path.join("/usr/lib/wackyblackie/bpotd/bpotd"), os.path.join("/usr/bin/bpotd")); print("\tSuccess. Link created: \033[4m/usr/lib/wackyblackie/bpotd/tray\033[0m \u2192 \033[4m/usr/bin/bpotd-tray\033[0m") if not os.path.exists(os.path.join("/usr/bin/bpotd")) else print("\t\033[1;94mI:\033[0m Symlink \033[4m/usr/bin/bpotd\033[0m already exists.")
-            os.symlink(os.path.join("/usr/lib/wackyblackie/bpotd/tray"), os.path.join("/usr/bin/bpotd-tray")); print("\tSuccess. Link created: \033[4m/usr/lib/wackyblackie/bpotd/bpotd\033[0m \u2192 \033[4m/usr/bin/bpotd\033[0m") if not os.path.exists(os.path.join("/usr/bin/bpotd")) else print("\t\033[1;94mI:\033[0m Symlink \033[4m/usr/bin/bpotd-tray\033[0m already exists.")
+            os.symlink(os.path.join("/usr/lib/alanmburr/bpotd/bpotd"), os.path.join("/usr/bin/bpotd")); print("\tSuccess. Link created: \033[4m/usr/lib/alanmburr/bpotd/tray\033[0m \u2192 \033[4m/usr/bin/bpotd-tray\033[0m") if not os.path.exists(os.path.join("/usr/bin/bpotd")) else print("\t\033[1;94mI:\033[0m Symlink \033[4m/usr/bin/bpotd\033[0m already exists.")
+            os.symlink(os.path.join("/usr/lib/alanmburr/bpotd/tray"), os.path.join("/usr/bin/bpotd-tray")); print("\tSuccess. Link created: \033[4m/usr/lib/alanmburr/bpotd/bpotd\033[0m \u2192 \033[4m/usr/bin/bpotd\033[0m") if not os.path.exists(os.path.join("/usr/bin/bpotd")) else print("\t\033[1;94mI:\033[0m Symlink \033[4m/usr/bin/bpotd-tray\033[0m already exists.")
         except:
             print("\t\033[1;91mE\033[1;97m: %s\033[0m" % sys.exc_info()[0])
             exit(1)
@@ -92,11 +92,11 @@ class Window(Gtk.Window):
         print("Trying to create \033[4m.desktop\033[0m files.")
         try:
             with open(os.path.join("/usr/share/applications", "bpotd-tray.desktop"), 'w') as fc:
-                fc.write("[Desktop Entry]\nType=Application\nName=bpotd Tray\nExec=/usr/bin/bpotd-tray\nIcon=/usr/lib/wackyblackie/bpotd/icon.ico\nX-GNOME-Autostart-enabled=true")
+                fc.write("[Desktop Entry]\nType=Application\nName=bpotd Tray\nExec=/usr/bin/bpotd-tray\nIcon=/usr/lib/alanmburr/bpotd/icon.ico\nX-GNOME-Autostart-enabled=true")
             with open(os.path.join("/etc/xdg/autostart/", "bpotd.desktop"), 'w') as fd:
-                fd.write("[Desktop Entry]\nType=Application\nName=bpotd Tray\nExec=/usr/bin/bpotd-tray\nIcon=/usr/lib/wackyblackie/bpotd/icon.ico\nX-GNOME-Autostart-enabled=true")
+                fd.write("[Desktop Entry]\nType=Application\nName=bpotd Tray\nExec=/usr/bin/bpotd-tray\nIcon=/usr/lib/alanmburr/bpotd/icon.ico\nX-GNOME-Autostart-enabled=true")
             with open(os.path.join("/usr/share/applications", "bpotd.desktop"), 'w') as fe:
-                fe.write("[Desktop Entry]\nType=Application\nName=bpotd\nExec=/usr/bin/bpotd\nIcon=/usr/lib/wackyblackie/bpotd/icon.ico\nX-GNOME-Autostart-enabled=false")
+                fe.write("[Desktop Entry]\nType=Application\nName=bpotd\nExec=/usr/bin/bpotd\nIcon=/usr/lib/alanmburr/bpotd/icon.ico\nX-GNOME-Autostart-enabled=false")
         except:
             print("\t\033[1;91mE\033[1;97m: %s\033[0m" % sys.exc_info()[0])
             exit(1)
